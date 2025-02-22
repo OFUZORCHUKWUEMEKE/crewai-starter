@@ -14,6 +14,10 @@ class Starter():
 	# Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
 	agents_config = 'config/agents.yaml'
 	tasks_config = 'config/tasks.yaml'
+	ollama_llm = LLM(
+		model="ollama/llama3",
+		base_url="http://localhost:11434"
+	)
 	
 	# If you would like to add tools to your agents, you can learn more about it here:
 	# https://docs.crewai.com/concepts/agents#agent-tools
@@ -22,7 +26,7 @@ class Starter():
 		return Agent(
 			config=self.agents_config['researcher'],
 			verbose=True,
-			llm=LLM(model="ollama/llama3.2",base_url="http://localhost:11434")
+			llm=self.ollama_llm
 		)
 
 	@agent
@@ -54,7 +58,7 @@ class Starter():
 		"""Creates the Starter crew"""
 		# To learn how to add knowledge sources to your crew, check out the documentation:
 		# https://docs.crewai.com/concepts/knowledge#what-is-knowledge
-
+		
 		return Crew(
 			agents=self.agents, # Automatically created by the @agent decorator
 			tasks=self.tasks, # Automatically created by the @task decorator
