@@ -1,5 +1,7 @@
 from crewai import Agent, Crew, Process, Task,LLM
 from crewai.project import CrewBase, agent, crew, task ,llm
+from dotenv import load_dotenv
+from crewai_tools import SerperDevTool,ScrapeWebsiteTool,FileWriterTool
 
 # If you want to run a snippet of code before or after the crew starts, 
 # you can use the @before_kickoff and @after_kickoff decorators
@@ -21,6 +23,36 @@ class Starter():
 	
 	# If you would like to add tools to your agents, you can learn more about it here:
 	# https://docs.crewai.com/concepts/agents#agent-tools
+	@agent()
+	def retrieve_news(self)->Agent:
+		return Agent(
+			config=self.agents_config['retrieve_news'],
+			tools=[SerperDevTool()],
+			verbose=True
+		)
+
+	@agent()
+	def website_scraper(self)->Agent:
+		return Agent(
+			config=self.agents_config['website_scraper'],
+			tools=[ScrapeWebsiteTool()]
+		)
+	@agent()
+	def ai_news_write(self)->Agent:
+		return Agent(
+			config=self.agents_config['ai_news_writer'],
+			tools=[],
+			verbose=True
+		)
+
+	@agent()
+	def file_writer(self)->Agent:
+		return Agent(
+			config=self.agents_config['file_writer'],
+			tools=[FileWriterTool()],
+			verbose=True
+		)
+	
 	@agent
 	def researcher(self) -> Agent:
 		return Agent(
@@ -39,7 +71,34 @@ class Starter():
 
 	# To learn more about structured task outputs, 
 	# task dependencies, and task callbacks, check out the documentation:
+	
 	# https://docs.crewai.com/concepts/tasks#overview-of-a-task
+
+	@task
+	def retrieve_news_task(self) -> Task:
+		return Task(
+			config=self.tasks_config['retrieve_new_task'],
+		)
+
+	@task
+	def website_scrape_task(self) -> Task:
+		return Task(
+			config=self.tasks_config['website_scrape_task'],
+		)
+
+	@task
+	def ai_news_write_task(self) -> Task:
+		return Task(
+			config=self.tasks_config['ai_news_write_task'],
+		)
+	
+	@task
+	def file_write_task(self) -> Task:
+		return Task(
+			config=self.tasks_config['file_write_task'],
+		)
+
+
 	@task
 	def research_task(self) -> Task:
 		return Task(
